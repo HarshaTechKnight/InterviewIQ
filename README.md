@@ -1,4 +1,4 @@
-Firebase Studio: AI-Powered Interview Analysis Platform
+# Firebase Studio: AI-Powered Interview Analysis Platform
 
 **Firebase Studio** is an innovative platform designed to streamline and enhance the interview process for recruiters and hiring managers. By leveraging the power of AI, our platform automates the analysis of candidate responses, providing valuable insights and saving countless hours of manual review.
 
