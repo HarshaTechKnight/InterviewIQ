@@ -29,6 +29,9 @@ Follow these steps to get the platform up and running on your local machine:
 3.  **Start the development server:** `npm run dev` or `yarn dev`
 4. **Access the app**: Navigate to http://localhost:3000 in your browser.
 
+
 ## Screenshots
 
-You can see a screenshot of the platform here: [screenshot.png](screenshot.png)
+You can see a screenshot of the platform here:
+![Screesnshot-1](https://github.com/user-attachments/assets/f94bb8dc-3f02-466c-8ac3-e8c949035359)
+![Screenshot-2](https://github.com/user-attachments/assets/5c8109ab-7c42-4f7f-a122-14e06dd4e3eb)
