@@ -11,8 +11,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Skeleton } from '@/components/ui/skeleton';
-import { BarChart, Brain, Lightbulb, Plus, Trash2 } from 'lucide-react';
+import { BarChart, Brain, Lightbulb, Plus, Trash2, TrendingUp, TrendingDown, ListChecks, CheckCircle, XCircle, HelpCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Badge } from '@/components/ui/badge';
 
 const formSchema = z.object({
   jobDescription: z.string().min(20, { message: 'Job description must be at least 20 characters.' }),
@@ -53,7 +54,7 @@ export function PostInterviewInsights() {
         setInsightsResult(result);
          toast({
           title: "Insights Generated",
-          description: "Post-interview insights and metrics generated.",
+          description: "Post-interview insights dashboard generated.",
           variant: "default",
         });
       } catch (error) {
@@ -70,8 +71,8 @@ export function PostInterviewInsights() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Post-Interview Insights Generation</CardTitle>
-        <CardDescription>Provide the job description and key candidate responses to generate insights and comparison metrics.</CardDescription>
+        <CardTitle>Post-Interview Insights Dashboard</CardTitle>
+        <CardDescription>Provide the job description and key candidate responses to generate a structured insights dashboard.</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -83,7 +84,7 @@ export function PostInterviewInsights() {
                 <FormItem>
                   <FormLabel>Job Description</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Paste the job description here..." {...field} disabled={isPending} />
+                    <Textarea placeholder="Paste the job description here..." {...field} disabled={isPending} rows={4} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -99,7 +100,7 @@ export function PostInterviewInsights() {
                   name={`candidateResponses.${index}.value`}
                   render={({ field }) => (
                     <FormItem className="mt-2">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-start gap-2">
                         <FormControl>
                            <Textarea
                             placeholder={`Response ${index + 1}`}
@@ -115,7 +116,8 @@ export function PostInterviewInsights() {
                               size="icon"
                               onClick={() => remove(index)}
                               disabled={isPending}
-                              className="text-destructive hover:bg-destructive/10"
+                              className="text-destructive hover:bg-destructive/10 mt-1 shrink-0"
+                              aria-label={`Remove response ${index + 1}`}
                             >
                               <Trash2 className="h-4 w-4" />
                            </Button>
@@ -138,45 +140,198 @@ export function PostInterviewInsights() {
               </Button>
             </div>
 
-            <Button type="submit" disabled={isPending}>
-              {isPending ? 'Generating...' : 'Generate Insights'}
+            <Button type="submit" disabled={isPending || !form.formState.isValid} className="w-full sm:w-auto">
+              {isPending ? 'Generating Dashboard...' : 'Generate Dashboard'}
             </Button>
           </form>
         </Form>
 
         {(isPending || insightsResult) && (
           <div className="mt-8 space-y-6">
-            <h3 className="text-lg font-semibold">Generated Insights & Metrics</h3>
+            <h3 className="text-xl font-semibold border-b pb-2 mb-4">Candidate Insights Dashboard</h3>
             {isPending ? (
-              <>
-                <Skeleton className="h-32 w-full" />
-                <Skeleton className="h-32 w-full" />
-              </>
+              <div className="space-y-6">
+                 {/* Summary Skeleton */}
+                 <Card>
+                    <CardHeader>
+                      <CardTitle className="text-lg font-semibold flex items-center gap-2">
+                         <Skeleton className="h-5 w-5 rounded-full" />
+                         <Skeleton className="h-5 w-32" />
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <Skeleton className="h-4 w-full mb-2" />
+                      <Skeleton className="h-4 w-3/4" />
+                    </CardContent>
+                 </Card>
+                 {/* Strengths/Weaknesses Skeleton */}
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <Card>
+                       <CardHeader>
+                         <CardTitle className="text-lg font-semibold flex items-center gap-2">
+                           <Skeleton className="h-5 w-5 rounded-full" />
+                           <Skeleton className="h-5 w-24" />
+                         </CardTitle>
+                       </CardHeader>
+                       <CardContent className="space-y-2">
+                         <Skeleton className="h-4 w-full" />
+                         <Skeleton className="h-4 w-full" />
+                         <Skeleton className="h-4 w-5/6" />
+                       </CardContent>
+                    </Card>
+                     <Card>
+                       <CardHeader>
+                         <CardTitle className="text-lg font-semibold flex items-center gap-2">
+                           <Skeleton className="h-5 w-5 rounded-full" />
+                           <Skeleton className="h-5 w-28" />
+                         </CardTitle>
+                       </CardHeader>
+                       <CardContent className="space-y-2">
+                         <Skeleton className="h-4 w-full" />
+                         <Skeleton className="h-4 w-5/6" />
+                       </CardContent>
+                    </Card>
+                 </div>
+                  {/* Skill Assessment Skeleton */}
+                  <Card>
+                    <CardHeader>
+                       <CardTitle className="text-lg font-semibold flex items-center gap-2">
+                         <Skeleton className="h-5 w-5 rounded-full" />
+                         <Skeleton className="h-5 w-40" />
+                       </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                       {[...Array(3)].map((_, i) => (
+                         <div key={i} className="flex justify-between items-center">
+                            <Skeleton className="h-4 w-1/3" />
+                            <Skeleton className="h-4 w-1/2" />
+                         </div>
+                       ))}
+                    </CardContent>
+                  </Card>
+                  {/* Comparison Points Skeleton */}
+                  <Card>
+                    <CardHeader>
+                       <CardTitle className="text-lg font-semibold flex items-center gap-2">
+                         <Skeleton className="h-5 w-5 rounded-full" />
+                         <Skeleton className="h-5 w-44" />
+                       </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                       {[...Array(3)].map((_, i) => (
+                         <div key={i} className="flex justify-between items-center">
+                           <Skeleton className="h-4 w-1/3" />
+                           <Skeleton className="h-6 w-1/4 rounded-full" /> {/* Badge Skeleton */}
+                         </div>
+                       ))}
+                    </CardContent>
+                  </Card>
+              </div>
             ) : insightsResult ? (
-              <>
-                <Card className="animate-fadeIn">
-                  <CardHeader>
-                     <CardTitle className="text-base font-semibold flex items-center gap-2">
-                       <Lightbulb className="h-4 w-4 text-accent" />
-                       Key Insights
+              <div className="space-y-6 animate-fadeIn">
+                 {/* Overall Summary Card */}
+                 <Card>
+                   <CardHeader>
+                     <CardTitle className="text-lg font-semibold flex items-center gap-2">
+                       <Brain className="h-5 w-5 text-primary" />
+                       Overall Summary
                      </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-foreground whitespace-pre-wrap">{insightsResult.insights}</p>
-                  </CardContent>
-                </Card>
-                <Card className="animate-fadeIn">
-                  <CardHeader>
-                    <CardTitle className="text-base font-semibold flex items-center gap-2">
-                       <BarChart className="h-4 w-4 text-primary" />
-                      Comparison Metrics
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                     <p className="text-sm text-foreground whitespace-pre-wrap">{insightsResult.comparisonMetrics}</p>
-                  </CardContent>
-                </Card>
-              </>
+                   </CardHeader>
+                   <CardContent>
+                     <p className="text-sm text-foreground">{insightsResult.overallSummary}</p>
+                   </CardContent>
+                 </Card>
+
+                 {/* Strengths and Weaknesses Cards */}
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-lg font-semibold flex items-center gap-2">
+                          <TrendingUp className="h-5 w-5 text-green-500" />
+                          Strengths
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                         {insightsResult.strengths.length > 0 ? (
+                            <ul className="list-disc list-inside space-y-1 text-sm text-foreground">
+                              {insightsResult.strengths.map((strength, index) => (
+                                <li key={index}>{strength}</li>
+                              ))}
+                            </ul>
+                         ) : (
+                            <p className="text-sm text-muted-foreground">No specific strengths highlighted.</p>
+                         )}
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-lg font-semibold flex items-center gap-2">
+                          <TrendingDown className="h-5 w-5 text-red-500" />
+                          Weaknesses / Areas for Development
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                         {insightsResult.weaknesses.length > 0 ? (
+                           <ul className="list-disc list-inside space-y-1 text-sm text-foreground">
+                             {insightsResult.weaknesses.map((weakness, index) => (
+                               <li key={index}>{weakness}</li>
+                             ))}
+                           </ul>
+                          ) : (
+                             <p className="text-sm text-muted-foreground">No specific weaknesses highlighted.</p>
+                          )}
+                      </CardContent>
+                    </Card>
+                 </div>
+
+                 {/* Skill Assessment Card */}
+                 <Card>
+                   <CardHeader>
+                     <CardTitle className="text-lg font-semibold flex items-center gap-2">
+                       <ListChecks className="h-5 w-5 text-accent" />
+                       Skill Assessment
+                     </CardTitle>
+                   </CardHeader>
+                   <CardContent>
+                      {insightsResult.skillAssessment.length > 0 ? (
+                        <div className="space-y-3">
+                          {insightsResult.skillAssessment.map((skill, index) => (
+                             <div key={index} className="flex flex-col sm:flex-row justify-between sm:items-center gap-1 sm:gap-4 text-sm">
+                                <span className="font-medium text-foreground">{skill.skill}</span>
+                                <span className="text-muted-foreground text-left sm:text-right">{skill.assessment}</span>
+                             </div>
+                          ))}
+                        </div>
+                       ) : (
+                          <p className="text-sm text-muted-foreground">No specific skills assessed.</p>
+                       )}
+                   </CardContent>
+                 </Card>
+
+                 {/* Comparison Points Card */}
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-lg font-semibold flex items-center gap-2">
+                        <BarChart className="h-5 w-5 text-purple-500" />
+                        Comparison Points
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                       {insightsResult.comparisonPoints.length > 0 ? (
+                         <div className="space-y-3">
+                           {insightsResult.comparisonPoints.map((point, index) => (
+                             <div key={index} className="flex flex-col sm:flex-row justify-between sm:items-center gap-1 sm:gap-4 text-sm">
+                               <span className="font-medium text-foreground">{point.metric}</span>
+                               <Badge variant="secondary" className="whitespace-nowrap self-start sm:self-center">{point.value}</Badge>
+                             </div>
+                           ))}
+                         </div>
+                        ) : (
+                           <p className="text-sm text-muted-foreground">No specific comparison points generated.</p>
+                        )}
+                    </CardContent>
+                  </Card>
+              </div>
             ) : null}
           </div>
         )}
